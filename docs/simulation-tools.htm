@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" version="2023-12-17" editor="USP" />
+<meta name="author" content="USP" />
+<meta name="creation-date" content="2014-04-07" />
+<meta name="editor" content="USP" />
+<meta name="change-date" content="2014-04-07" />
+<meta name="version" content="1" />
+<meta name="categories" content="Electronic Design > Simulation" />
+<meta name="tags" content="" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="all" />
+<link rel="stylesheet" href="/inc/page-2.css" />
+
+<meta name="description" content="An overview over the circuit simulation tools" />
+
+<title>Circuit Simulation - Overview over the circuit simulation tools</title>
+</head><body><header id="page-header"><object data="title.svg" type="image/svg+xml"></object></header><div id="main-toolbar"></div><main id="page-content">
+
+<h1>Overview</h1>
+
+<p id="abstract"></p>
+
+<h2 cbc>LTSpice</h2><div>
+
+<p><a href="https://www.analog.com/en/resources/design-tools-and-calculators/ltspice-simulator.html">Download</a></p>
+
+<!--h2--LTSpice--></div>
+
+<h2 cbc>Microchip Mindi</h2><div>
+
+<!--h2--Mindi--></div>
+
+<h2 cbc>Multisim</h2><div>
+
+<p>Multisim by National Instruments</p>
+
+<!--h2--Multisim--></div>
+
+<h2 cbc>NGSpice</h2><div>
+
+<p>NGSpice is installed with KiCad, so you can use KiCad as front-end for the simulation.</p>
+
+<p>A good NGSpice tutorial can be found at <a href="https://ngspice.sourceforge.io/ngspice-eeschema.html">ngspice.sourceforge.io</a>.</p>
+
+<p>Stability is an issue, in 2024-04-07, I got KiCad freezing when I zoomed in but was not able to zoom out.</p>
+
+<h3 cbc>Additional Resources</h3><div>
+
+<dl class="link-list">
+<dt><a href="https://www.youtube.com/watch?v=pCQ4MUyQjx0">Getting the DC Operating Point</a> by ElectronX Lab on Youtube</dt><dd>
+	<p>Shows how to get around the missing .op simulation command.</p></dd>
+</dl>
+
+<!--h3--Additional Resources--></div>
+
+<!--h2--NGSpice--></div>
+
+<h2 cbc>PSpice for TI</h2><div>
+
+<p>PSpice for TI is the successor of TI TINA, for various reasons. The TI version is not limited in design size, but somewhat limited to TI models. Only three imported models can be probed simultaneously. This does not apply to power MOSFETs, power diodes, passives with parasitics, independent sources, switches and transformers.</p>
+
+<ul>
+<li>Unlimited number of nodes</li>
+<li>Multipage and hierarchical schematics</li>
+</ul>
+
+<p>Includes standard PSpice libraries:</p>
+<dl>
+<dt>ABM</dt><dd><p>Analog behavioral models for various math functions</p></dd>
+<dt>ANALOG</dt><dd><p>Passives, dependent sources, switches, transmission lines</p></dd>
+<dt>BREAKOUT</dt><dd><p>Customizable versions of many device types</p></dd>
+<dt>DIG_MISC</dt><dd><p>Digital timing control, pull-up / pull-down resistors</p></dd>
+<dt>DIG_PRIM</dt><dd><p>Logic gates, flip-flops</p></dd>
+<dt>SOURCE</dt><dd><p>Independent voltage and current sources</p></dd>
+<dt>SPECIAL</dt><dd><p>Parameters, simulation control, library management, utilities</p></dd>
+</dl>
+
+<!--h2--PSpice for TI--></div>
+
+<h2 cbc>TI TINA</h2><div>
+
+<p>TI-TINA has been superseeded by PSpice for TI, for a number of reasons:</p>
+
+<ul>
+<li>No parametric variable sweeps</li>
+<li>No Monte-Carlo analysis</li>
+<li>No worst-case analysis</li>
+<li>1300 vs 5700 internal libraries</li>
+<li>No automatic library updates</li>
+<li>No built-in modeling application</li>
+<li>No hierarchical schematics</li>
+<li>No multipage schematics</li>
+</ul>
+
+<!--h2--TINA--></div>
+
+
+</main><footer id="page-footer"></footer>
+<script type="module" src="/inc/page.js" ></script>
+<script type="module" src="/inc/fragment-loader/simple-fragment-loader-2.js"></script>
+</body></html>

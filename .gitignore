@@ -1,0 +1,9 @@
+/.vs
+/bat
+/docs/inc
+/docs/favicon.svg
+/docs/logo.svg
+*-backups/
+fp-info-cache
+*.lck
+*-bak

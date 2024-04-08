@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" version="2023-12-17" editor="USP" />
+<meta name="author" content="USP" />
+<meta name="creation-date" content="2024-04-08" />
+<meta name="editor" content="USP" />
+<meta name="change-date" content="2024-04-08" />
+<meta name="version" content="1" />
+<meta name="categories" content="Software > EDA > Circuit Design and Simulation" />
+<meta name="tags" content="" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="all" />
+<link rel="stylesheet" href="/inc/page-2.css" />
+<link rel="stylesheet" href="/inc/checked-items/checked-items-1.css" />
+
+<meta name="description" content="KiCad bunldes Ngspice for circuit simulation." />
+
+<title>Circuit Design and Simulation - KiCad Circuit Simulation</title>
+</head><body><header id="page-header"><object data="title.svg" type="image/svg+xml"></object></header><div id="main-toolbar"></div><main id="page-content">
+
+<h1>KiCad Circuit Simulation</h1>
+
+<p id="abstract"></p>
+
+<h2 cbc>Links</h2><div>
+
+<dl class="link-list">
+<dt><a href="https://ngspice.sourceforge.io/docs.html">Ngspice website</a></dt>
+<dt><a href="https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml">Ngspice documentation</a></dt>
+</dl>
+
+<!--h2--Links--></div>
+
+<h2 cbc>RCRC Demo</h2><div>
+
+<p>We will use this project to run two simulations, an AC small signal analysis, and a transient response analysis. We will start with the AC analysis.</p>
+
+<p>The project can be found in the <tt>.../kicad/simulation-demo-1</tt> project subfolder on github.</p>
+
+<h3 cbc>AC Small Signal Analysis</h3><div>
+
+<p>The first demo starts with a simple network of passive components:</p>
+
+<figure><figcaption class="figure">RCRC circuit</figcaption>
+	<img src="figures/fig-001.png" width="300" />
+	</figure>
+
+<dl class="instruction-list checked-items">
+<dt>1. Place the following symbols on the sheet: </dt>
+	<dd><ul>
+	<li>1&times; <tt>Simulation_SPICE</tt> : <tt>VDC</tt> (Voltage source, DC)</li>
+	<li>3&times; <tt>Simulation_SPICE</tt> : <tt>0</tt> (0V reference potential for simulation)</li>
+	<li>2&times; <tt>Device</tt> : <tt>R</tt> (Resistor)</li>
+	<li>2&times; <tt>Device</tt> : <tt>C</tt> (Unpolarized capacitor)</li>
+	</ul></dd>
+<dt>2. Arrange and connect the components as shown in figure 1 above.</dt>
+<dt>3. Add the labels "in" and "out".</dt>
+</dl>
+
+<p>Now edit the componenent values as follows:</p>
+
+<dl class="instruction-list checked-items">
+<dt>4. Double-click the voltage source V1, then click the button "Simulation Model..." at the bottom.</dt>
+	<dd><p>The simulation model editor appears.</p></dd>
+<dt>5. On the "Parameters" tab, set the "DC value (dc)" to 0.</dt>
+	<dd>We want to perform an AC analysis with no DC offset.</dd>
+<dt>6. Set the "AC magnitude (ac)" to 1.</dt>
+	<dd>We will simulate with a 1 volt AC signal.</dd>
+<dt>7. Click "OK" to close the two dialogs.</dt>
+<dt>8. Double-click the "R1" value, an set the value to "10k".</dt>
+<dt>9. Similarly, set the following component values:</dt>
+	<dd>R2=1k, C1=1u, C2=100n.</dd>
+</dl>
+
+<p>Now we will setup the simulation command.</p>
+
+<dl class="instruction-list checked-items">
+<dt>10. Click the menu <tt>Inspect</tt> &gt; <tt>Simulator</tt>.</dt>
+	<dd>This opens the "Spice Simulator" window.</dd>
+<dt>11. Click the menu <tt>File</tt> &gt; <tt>New analysis tab</tt>.</dt>
+	<dd>The "New Simulation Tab" dialog appears.</dd>
+<dt>12. Set the "Analysis type" to "AC - Small-Signal Analysis".</dt>
+<dt>13. Set the fields as follows:</dt><dd>
+	<p>Number of points per decade = 10</p>
+	<p>Start frequency = 1</p>
+	<p>Stop frequency = 100k</p></dd>
+<dt>14. Click "OK" to close the dialog.</dt>
+</dl>
+
+<p>You are now back in the simulation window. The panel on the right shows the signals (nodes) in the schematic, with checkboxes in front of them. The selected signals will be shown in result diagram.</p>
+
+<dl class="instruction-list checked-items">
+<dt>15. Check the following signals:</dt><dd>
+	<ul>
+	<li>V(out)(gain)</li>
+	<li>V(out)(phase)</li>
+	</ul></dd>
+<dt>16. Click the menu <tt>Simulation</tt> &gt; <tt>Run</tt>.</dt>
+	<dd>After a short while, the selected signals should show up in the diagram.</dd>
+</dl>
+
+<p>That should run the simulation and produce the following Bode diagram:</p>
+
+<figure><figcaption class="figure">AC analysis Bode diagram</figcaption>
+	<img src="figures/fig-002.png" width="500" />
+	</figure>
+
+<!--h3--AC Small Signal Analysis--></div>
+
+<h3 cbc>Transient Analysis</h3><div>
+
+<p>We will continue to work on the <tt>simulation-demo-1</tt> project. The transient analysis uses a different voltage source, so we will first move V1 out of the circuit. We will not delete the component, because we don't want to loose its configuration. So begin with the following steps:</p>
+
+<dl class="instruction-list checked-items">
+<dt>1. Hover the mouse over the voltage source <tt>V1</tt> and press <tt>m</tt>.</dt>
+	<dd>Move the component somewhat out of the way and click to put it down. Note that in contrast to the <em>drag</em> command, the component is <em>detached</em> from its connections.</dd>
+<dt>2. Copy a ground symbol and attach it to one pin of the voltage source.</dt>
+	<dd>This is just to make sure that we have no floating component in the netlist, which could compromise the simulation.</dd>
+<dt>3. Press <tt>a</tt> on the keyboard to add a new <tt>Simulation_SPICE:VPULSE</tt> component.</dt>
+	<dd>Place it in the previous position of <tt>V1</tt> into the schematic. That should connect <tt>V2</tt> to the circuit.</dd>
+	<dd></dd>
+<dt>4. Double-click <tt>V2</tt> to open the symbol properties dialog.</dt>
+<dt>5. Click on the <tt>Simulation Model...</tt> button to open the <tt>Simulation Model Editor</tt> dialog. Set the following values:</dt><dd>
+	<ul class="no-bullets">
+	<li>Device type = Pulse</li>
+	<li>Initial value (y1) = 0</li>
+	<li>Pulsed value (y2) = 5</li>
+	<li>Delay (td) = 2u</li>
+	<li>Rise time (tr) = 1u</li>
+	<li>Fall time (tf) = 1u</li>
+	<li>Pulse width (tw) = 1</li>
+	<li>Perios (per) = 1</li>
+	<li>AC magnitute = 1</li>
+	</ul></dd>
+<dt>6. Click <tt>OK</tt> to close both dialog windows.</dt>
+</dl>
+
+<p>It should look like this:</p>
+<figure><figcaption class="figure">Using a pulse voltage source</figcaption>
+	<img src="figures/fig-003.png" width="500" />
+	</figure>
+
+<p>Now that the voltage source is configured, we can set up the simulation command:</p>
+
+<dl class="instruction-list checked-items">
+<dt>7. Click the menu <tt>Inspect</tt> &gt; <tt>Simulator</tt>.</dt>
+<dt>8. Click the menu <tt>File</tt> &gt; <tt>New analysis tab</tt>.</dt>
+<dt>9. Set the following fields:</dt><dd>
+	<ul class="no-bullets">
+	<li>Analysis type = TRAN - Transient analysis</li>
+	<li>Time step = 100u</li>
+	<li>Final time = 100m</li>
+	</ul></dd>
+<dt>10. Click the menu <tt>Simulation</tt> &gt; <tt>Run</tt>.</dt>
+<dt>11. Inspect the log message on the lower left panel. There should be no error messages.</dt>
+<dt>12. Select the signals <tt>V(in)</tt> and <tt>V(out)</tt>.</dt>
+	<dd>This should add the corresponding signal graphs to the diagram.</dd>
+</dl>
+
+<figure><figcaption class="figure">Transient response</figcaption>
+	<img src="figures/fig-003.png" width="500" />
+	</figure>
+
+<!--h3--Transient Analysis--></div>
+
+<!--h2--RCRC Demo--></div>
+
+<h2 cbc>Transistor Amp Demo</h2><div>
+
+<p>The following example can be found in </p>
+
+<!--h2--Transistor Amp Demo--></div>
+
+</main><footer id="page-footer"></footer>
+<script type="module" src="/inc/page.js" ></script>
+<script type="module" src="/inc/fragment-loader/simple-fragment-loader-2.js"></script>
+<script defer src="/inc/checked-items/checked-items-1.js"></script>
+</body></html>
