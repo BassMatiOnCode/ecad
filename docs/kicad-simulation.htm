@@ -160,7 +160,7 @@
 </dl>
 
 <figure><figcaption class="figure">Transient response</figcaption>
-	<img src="figures/fig-003.png" width="500" />
+	<img src="figures/fig-004.png" width="500" />
 	</figure>
 
 <!--h3--Transient Analysis--></div>
@@ -169,12 +169,247 @@
 
 <h2 cbc>Transistor Amp Demo</h2><div>
 
-<p>The following example can be found in </p>
+<p>The following example can be found in <a href="https://github.com/BassMatiOnCode/ecad/tree/main/kicad/simulation-demo-2">.../kicad/simulation-demo-2</a> on Github.</p>
+
+<figure><figcaption class="figure">Bipolar transistor amplifier</figcaption>
+	<img src="figures/fig-005.png" width="500" />
+	</figure>
+
+<h3 cbc>Creating the Circuit</h3><div>
+
+<dl class="instruction-list checked-items">
+<dt>1. Create a new project, then open the schematics editor.</dt>
+<dt>2. Add the following components and set their values according to figure 5:</dt><dd>
+	<ol class="no-bullets">
+	<li>1 &times; Simulation_SPICE:VDC</li>
+	<li>1 &times; Simulation_SPICE:VSIN</li>
+	<li>5 &times; Device:R</li>
+	<li>2 &times; Device:C</li>
+	<li>1 &times; Simulation_SPICE:NPN</li>
+	<li>5 &times; Simulation_SPICE:0</li>
+	</ol></dd>
+<dt>3. Arrange and connect the components according to figure 5.</dt>
+<dt>4. Configure the sinus voltage source V2 (double-click, Simulation Model...). Set the following values in the Simulation Model Editor:</dt><dd>
+	<ul class="no-bullets">
+	<li>Device type = Sine</li>
+	<li>DC offset (dc) = 0</li>
+	<li>Amplitute (amp) = 10m</li>
+	<li>Frequency (f) = 1k</li>
+	<li>AC magnitude (ac) = 1</li>
+	</ul>
+	<p>Close the dialog boxes.</p></dd>
+<dt>5. Add the following labels:</dt>
+	<dd>in, out.</dd>
+</dl>
+
+<p>Note that R5 is required to prevent the right side of C2 from floating. Floating nets cause simulation errors.</p>
+
+<p>Now we are ready to simulate.</p>
+
+<!--h3--Creating the Circuit--></div>
+
+<h3 cbc>Operation Point Analysis</h3><div>
+
+<dl class="instruction-list checked-items">
+<dt>1. Click the menu <tt>Inspect</tt> &gt; <tt>Simulator.</tt></dt>
+<dt>2. Click the menu <tt>File</tt> &gt; <tt>Add simulation tab</tt>.</dt>
+<dt>3. Set the following value:</dt>
+	<dd>Analysis type = OP - DC Operating Point</dd>
+<dt>4. Click <tt>OK</tt> to close the dialog.</dt>
+<dt>5. Click the menu <tt>Simulation</tt> &gt; <tt>Run</tt>.</dt>
+<dt>6. Inspect the log panel for errors and results.</dt>
+</dl>
+
+<p>The log window shows many interesting values. And the circuit diagram has been updated with small value labels:</p>
+
+<figure><figcaption class="figure">DC operating point values in the schematic</figcaption>
+	<img src="figures/fig-006.png" width="500" />
+	</figure>
+
+<p>These labels allow to quickly inspect the circuit for fatal design flaws.</p>
+
+<!--h3--Operation Point Analysis--></div>
+
+<h3 cbc>Transient Analysis</h3>
+
+<p>We will now have a look at the input and output signals.</p>
+
+<dl class="instruction-list checked-items">
+<dt>1. Click the menu <tt>Inspect</tt> &gt; <tt>Simulator</tt>.</dt>
+<dt>2. Click the menu <tt>Simulation</tt> &gt; <tt>New analysis tab</tt>.</dt>
+<dt>3. Set the following values:</dt>
+	<dd><ul class="no-bullets">
+	<li>Analysis type = TRAN - Transient Analysis</li>
+	<li>Time step = 10u</li>
+	<li>Final time = 10m</li>
+	</ul></dd>
+<dt>4. Click <tt>OK</tt> to close the setup dialog.</dt>
+<dt>5. Select the signals <tt>V(in)</tt> and <tt>V(out)</tt>.</dt>
+<dt>Click the menu <tt>Simulation</tt> &gt; <tt>Run</tt>.</dt>
+</dl>
+
+<p>You should get the following plot:</p>
+
+<figure><figcaption class="figure">Transient analysis plot</figcaption>
+	<img src="figures/fig-007.png" width="500" />
+	</figure>
+
+<p>The image shows a decent small-signal ac gain of 21.</p>
+
+<p>The next step replaces the generic NPN transistor with a suitable "real-world" transistor, e. g. a BC546. Unfortunately, KiCad doesn't come with the model parameters, so we must add them manually. For this purpose, visit the <a href="https://ngspice.sourceforge.io/modelparams.html">Ngspice simulation models</a> page. A small subset is contained in <a href="https://ngspice.sourceforge.io/model-parameters/basic_models.7z">basic_models.7z</a>, including the BC546. Download an extract the archive, then copy the file <tt>BC546.lib</tt> to the project folder.</p>
+
+<p>To add the model parameters to the symbol, </p>
+
+<dl class="instruction-list checked-items">
+<dt>1. Double-click the transistor symbol.</dt>
+<dt>2. Click <tt>Simulation Model...</tt> button.</dt>
+<dt>3. Activate the option <tt>SPICE model from file</tt></dt>
+<dt>4. Browse to the file <tt>BC546.lib</tt>.</dt>
+<dt>5. Select the <tt>Model</tt> = <tt>BC546B</tt>.</dt>
+<dt>5. Click <tt>OK</tt> to close the two dialogs.</dt>
+<dt>6. Re-run the simulation.</dt>
+</dl>
+
+<p>The results are somewhat distorted:</p>
+
+<figure><figcaption class="figure">Distorted output signal</figcaption>
+	<img src="figures/fig-008.png" width="500" />
+	</figure>
+
+<p>The transistor DC operating point must be tuned. The good news is that Ngspice provides a very handy tool for that purpose:</p>
+
+<dl class="instruction-list checked-items">
+<dt>7. In the simulator window, click on the menu <tt>Simulation</tt> &gt; <tt>Add tuned value</tt>.</dt>
+<dt>8. In the schematic diagram, click on <tt>R1</tt> and <tt>R2</tt>.</dt>
+	<dd>This adds two "tuning panels" to the lower right corner of the simulation.</dd>
+<dt>9. Press ESC to finish selection.</dt>
+<dt>10. Activate the simulator window and fiddle around with the sliders.</dt><dd>
+	<p>Each move of the slider re-runs the simulation automatically. This way we can find a satisfying combination for R1 and R2 (68k and 11k), which shows a symmetric and undistored output curve.</p>
+	<p>Note to keep some margin to the value where the distortions appear. This makes the circuit resistant against resistor tolerances.</p></dd>
+<dt>11. When done, click the <tt>Save</tt> buttons to update the schematic with the new values.</dt>
+</dl>
+
+<p>The result is a non-distorted output curve:</p>
+
+<figure><figcaption class="figure">DC operating point corrected</figcaption>
+	<img src="figures/fig-009.png" width="500" />
+	</figure>
 
 <!--h2--Transistor Amp Demo--></div>
+
+<h2 cbc>OP Amp Demo</h2><div>
+
+<p>This example presents a simple Op Amp circuit, and demonstrates how to solve incompatible pin layout.</p>
+
+<p>The files can be found on <a href="https://github.com/bassmationcode/ecad/kicad/simulation-demo-3">.../ecad/kicad/simulation-demo-3</a> on Github.</p>
+
+<figure><figcaption class="figure">The Op Amp Circuit</figcaption>
+	<img src="figures/fig-010.png" width="400" />
+	</figure>
+
+<h3 cbc>Creating the Circuit</h3><div>
+
+<p>To create the circuit diagram, follow these steps:</p>
+
+<dl class="instruction-list checked-items" data-contextmenu-id="context-menu-1">
+<dt>1. Add the following components to the diagram:</dt>
+	<dd><ul class="no-bullets checked-items">
+	<li>1&times; Simulation_SPICE:OPAMP</li>
+	<li>2&times; Device:R</li>
+	<li>1&times; Simulation_SPICE:VSIN</li>
+	<li>3&times; Simulation_SPICE:VDC</li>
+	<li>4&times; Simulation_SPICE:0</li>
+	</ul></dd>
+<dt>2. Set values, arrange and wire them according to figure 10 above.</dt>
+</dl>
+
+<!--h3--Creating the Circuit--></div>
+
+<h3 cbc>DC Simulation</h3><div>
+
+<p>To set up the DC simulation, follow these steps:</p>
+
+<dl class="instruction-list checked-items">
+<dt>1. Click the menu <tt>Inspect</tt> &gt; <tt>Simulator</tt>.</dt>
+<dt>2. Click the menu <tt>Simulation</tt> &gt; <tt>New analysis tab</tt>.</dt>
+<dt>3. Set the following fields:</dt><dd>
+	<ul class="no-bullets checked-items">
+	<li>Analysis type = DC - DC Sweep Analysis</li>
+	<li>Sweep type = V</li>
+	<li>Source = V3</li>
+	<li>Starting value = &minus;0.01</li>
+	<li>Final value = 0.1</li>
+	<li>Increment step = 0.01</li>
+	</ul></dd>
+<dt>4. Click <tt>OK</tt> to close the dialog.</dt>
+<dt>5. Run the simulation.</dt>
+<dt>6. Add <tt>V(in)</tt> and <tt>V(out)</tt> to the diagram.</dt>
+</dl>
+
+<p>You should get the following diagram:</p>
+
+<figure><figcaption class="figure">DC Sweep Analysis Results</figcaption>
+	<img src="figures/fig-011.png" width="500" />
+	</figure>
+
+<p>Note the negative slope of the output voltage graph. This is an inverting amplifier. Also note the output offset voltage of minus 100 mV for V(in)=0V.</p>
+
+<p>The op amp parameters can be modified. Double-click the opamp symbol in the schematic, then click "Simulation Model...". In the <tt>Simulation Model Editor</tt>, you can change the values POLE, GAIN, VOFF and ROUT. Setting VOFF to 1m changes the output offset voltage to &minus;11 mV.</p>
+
+<p>POLE is the frequency where the open-loop gain begins to fall. Poles cause overshoot and ringing. <a href="http://www.ecircuitcenter.com/OpModels/2nd_and_3rd_Poles/2nd_and_3rd_Poles.htm">Here</a> is a nice detailed article about an opamp model with 3 poles.</p>
+
+<!--h3--DC Simulation--></div>
+
+<h3 cbc>Transient Analysis</h3><div>
+
+<p>The transiend analysis needs an AC voltage source at the input, so swap V3 and V4 in the schematic. Simulation model parameters for V4 are DC offset (dc) = 0, amplitute (ampl) = 1, frequency (f) = 1k, AC magnitute (ac) = 1.</p>
+
+<p>Here are the results:</p>
+
+<figure><figcaption class="figure">Transient analysis</figcaption>
+	<img src="figures/fig-012.png" width="500" />
+	</figure>
+
+<!--h3--Transient Analysis--></div>
+
+<h3 cbc>AC Analysis</h3><div>
+
+<p>Add another analysis tab in the simulator, and set the following parameters:</p>
+
+<ul class="no-bullets">
+<li>Analysis type = AC - Small-Signal Analysis</li>
+<li>Number of points per decade = 10</li>
+<li>Start frequency = 1</li>
+<li>Stop frequency = 1 Meg</li>
+</ul>
+
+<p>Add V(out) gain and V(out) phase to the diagram.</p>
+
+<figure><figcaption class="figure">AC small-signal analysis</figcaption>
+	<img src="figures/fig-013.png" width="500" />
+	</figure>
+
+<!--h3--AC Analysis--></div>
+
+<h3>Swapping the Opamp</h3><div>
+
+<p>As already mentioned, Ngspice doesn't come with device simulation models, so we will have to rely on vendors. Here, we will use the lib for the <a href="https://www.ti.com/lit/zip/sbom627">TI OPA1641</a>. Copy the file "OPA164x.LIB into the project folder, then double-click the opamp symbol, then click the "Simulation Model..." button, then set the <tt>Spice model from file</tt> to that file, then select the "OPA164x" into the model name field.</p>
+
+<p>Then activate the "Pin Assignments" tab. Verify that the pin numbers of the symbol matches the pin numbers of the simulation model. Which is the case here. If not, use the dropdown-listboxed to assign the correct model pins to the related symbol pins.</p>
+
+<p>If we now re-run the AC small-signal analysis, we find that the frequency range is too small. A value of 10Meg produces a useful curve:</p>
+
+<figure><figcaption class="figure">OPA164x AC small-signal analysis</figcaption>
+	<img src="figures/fig-014.png" width="500" />
+	</figure>
+
+<!--h3--Swapping the Opamp--></div>
+
+<!--h2--OP Amp Demo--></div>
 
 </main><footer id="page-footer"></footer>
 <script type="module" src="/inc/page.js" ></script>
 <script type="module" src="/inc/fragment-loader/simple-fragment-loader-2.js"></script>
-<script defer src="/inc/checked-items/checked-items-1.js"></script>
+<script defer src="/inc/checked-items/checked-items-1.js" data-default-contextmenu-id="context-menu-1"></script>
+<script defer src="/inc/context-menu/context-menu-1.js"></script>
 </body></html>
